@@ -14,6 +14,26 @@ class _CreateFlashcardScreenState extends State<CreateFlashcardScreen> {
   final TextEditingController _questionController = TextEditingController();
   final TextEditingController _answerController = TextEditingController();
 
+  // List to store flashcards
+  List<Map<String, String>> flashcards = [];
+
+  void saveFlashcard() {
+    // Store question and answer in the flashcards list
+    String question = _questionController.text.trim();
+    String answer = _answerController.text.trim();
+
+    if (question.isNotEmpty && answer.isNotEmpty) {
+      flashcards.add({"question": question, "answer": answer});
+
+      // Clear the text fields for new input
+      _questionController.clear();
+      _answerController.clear();
+
+      // Optional: Print flashcards to console for debugging
+      print(flashcards);
+    }
+  }
+
   @override
   void dispose() {
     _questionController.dispose();
@@ -38,11 +58,10 @@ class _CreateFlashcardScreenState extends State<CreateFlashcardScreen> {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 40),
-            // Wrap your form fields in a Card widget
             Card(
-              elevation: 4.0, // Adjust elevation for depth effect
+              elevation: 4.0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15), // Round corners
+                borderRadius: BorderRadius.circular(15),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -55,10 +74,9 @@ class _CreateFlashcardScreenState extends State<CreateFlashcardScreen> {
                       decoration: InputDecoration(
                         hintText: 'Enter question here',
                         contentPadding: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 10.0), // Adjust padding
+                            vertical: 10.0, horizontal: 10.0),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                              10.0), // Round corners of the input field
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
                     ),
@@ -69,24 +87,21 @@ class _CreateFlashcardScreenState extends State<CreateFlashcardScreen> {
                       decoration: InputDecoration(
                         hintText: 'Enter answer here',
                         contentPadding: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 10.0), // Adjust padding
+                            vertical: 10.0, horizontal: 10.0),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                              10.0), // Round corners of the input field
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: saveFlashcard,
+                        child: Text('Save Flashcard'),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  // Logic to handle save action
-                },
-                child: Text('Save and Create New Flashcard'),
               ),
             ),
           ],

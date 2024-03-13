@@ -6,6 +6,7 @@ import 'quiz_mode_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final user = FirebaseAuth.instance.currentUser!;
+  List<String> categories = ['Math', 'World History', 'Literature', 'Science'];
 
   // sign user out
   void signOutUser(BuildContext context) {
@@ -14,18 +15,80 @@ class HomeScreen extends StatelessWidget {
     Navigator.pushReplacementNamed(context, '/signin');
   }
 
-  void showCreateFlashcardsDialog(BuildContext context) {
+  //pop-up for browse flashcard
+  void showBrowseFlashcardDialog(BuildContext context) {
     List<String> categories = [
       'Math',
       'World History',
       'Literature',
       'Science'
-    ];
-
+    ]; // Example categories list
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        String? selectedCategory;
+        String? selectedCategory =
+            null; // This holds the selected dropdown value
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Select Category'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    DropdownButton<String>(
+                      value: selectedCategory,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedCategory =
+                              newValue; // Update the selected value
+                        });
+                      },
+                      items: categories
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      hint: const Text('Select a category'),
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Close'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Continue'),
+                  onPressed: () {
+                    if (selectedCategory != null) {
+                      // Perform navigation after state update and if a category is selected
+                      Navigator.of(context).pop(); // Close the dialog first
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => BrowseFlashcardsScreen(
+                            selectedCategory: selectedCategory),
+                      ));
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  //popup for create flashcard
+  void showCreateFlashcardsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String? selectedCategory = null;
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
@@ -53,6 +116,19 @@ class HomeScreen extends StatelessWidget {
                         );
                       }).toList(),
                       hint: const Text('Select a category'),
+                    ),
+                    TextButton(
+                      child: const Text('Continue'),
+                      onPressed: () {
+                        if (selectedCategory != null) {
+                          // Perform navigation after state update and if a category is selected
+                          Navigator.of(context).pop(); // Close the dialog first
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => BrowseFlashcardsScreen(
+                                selectedCategory: selectedCategory),
+                          ));
+                        }
+                      },
                     ),
                   ],
                 ),
@@ -137,14 +213,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 10),
             // Additional buttons here...
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BrowseFlashcardsScreen(),
-                  ),
-                );
-              },
+              onPressed: () => showBrowseFlashcardDialog(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color.fromARGB(
                     255, 77, 104, 255), // Match sign-in button color
