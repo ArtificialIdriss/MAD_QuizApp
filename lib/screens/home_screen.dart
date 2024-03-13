@@ -14,51 +14,128 @@ class HomeScreen extends StatelessWidget {
     Navigator.pushReplacementNamed(context, '/signin');
   }
 
+  void showCreateFlashcardsDialog(BuildContext context) {
+    List<String> categories = [
+      'Math',
+      'World History',
+      'Literature',
+      'Science'
+    ];
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String? selectedCategory;
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Create or Select Category'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () => showAddCategoryDialog(
+                          context, categories, () => setState(() {})),
+                      child: const Text('Add New Category'),
+                    ),
+                    DropdownButton<String>(
+                      value: selectedCategory,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedCategory = newValue;
+                        });
+                      },
+                      items: categories
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      hint: const Text('Select a category'),
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Close'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void showAddCategoryDialog(
+      BuildContext context, List<String> categories, VoidCallback onUpdated) {
+    final TextEditingController categoryController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Add New Category"),
+          content: TextField(
+            controller: categoryController,
+            decoration: const InputDecoration(hintText: "Enter category name"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text("Add"),
+              onPressed: () {
+                final String categoryName = categoryController.text.trim();
+                if (categoryName.isNotEmpty) {
+                  categories.add(categoryName);
+                  onUpdated();
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        CreateFlashcardScreen(categoryName: categoryName),
+                  ));
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
       ),
-      backgroundColor:
-          Color.fromARGB(255, 124, 168, 201), // Use consistent background color
+      backgroundColor: const Color.fromARGB(255, 124, 168, 201),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              "Logged In As: " + user.email!,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(height: 20),
+            Text("Logged In As: ${user?.email ?? 'N/A'}",
+                style: const TextStyle(fontSize: 18, color: Colors.black)),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateFlashcardScreen(),
-                  ),
-                );
-              },
+              onPressed: () => showCreateFlashcardsDialog(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(
-                    255, 77, 104, 255), // Match sign-in button color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      8), // Match sign-in button border radius
-                ),
-              ),
-              child: Text(
-                'Create Flashcards',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
+                  backgroundColor: const Color.fromARGB(255, 77, 104, 255)),
+              child: const Text('Create Flashcards',
+                  style: TextStyle(color: Colors.white)),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
+            // Additional buttons here...
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
