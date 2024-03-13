@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_card_app/components/my_textfield.dart';
+import 'package:flash_card_app/screens/sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   SignInScreen({Key? key}) : super(key: key);
@@ -10,11 +11,9 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  // text editing controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // sign user in method
   void signUserIn() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -63,19 +62,16 @@ class _SignInScreenState extends State<SignInScreen> {
       backgroundColor: Color.fromARGB(255, 124, 168, 201),
       body: SafeArea(
         child: SingleChildScrollView(
-          // Wrap your Column with SingleChildScrollView
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                // logo
                 const Icon(
                   Icons.lock,
                   size: 100,
                 ),
                 const SizedBox(height: 50),
-                // welcome back, you've been missed!
                 Text(
                   'Welcome back you\'ve been missed!',
                   style: TextStyle(
@@ -84,14 +80,12 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 const SizedBox(height: 25),
-                // email textfield
                 MyTextField(
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
                 ),
                 const SizedBox(height: 10),
-                // password textfield
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
@@ -99,7 +93,6 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 25),
-                // sign in button
                 GestureDetector(
                   onTap: signUserIn,
                   child: Container(
@@ -122,28 +115,37 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 const SizedBox(height: 50),
-                // not a member? register now
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Not a member?',
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
+                // Wrap "Register now" text with GestureDetector to make it tappable
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              SignUpScreen()), // Navigate to SignUpScreen
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Not a member?',
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    const Text(
-                      'Register now',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 19, 125, 211),
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(width: 4),
+                      const Text(
+                        'Register now',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 19, 125, 211),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                    height: 100), // Add some additional space at the bottom
+                const SizedBox(height: 100),
               ],
             ),
           ),

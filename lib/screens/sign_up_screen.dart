@@ -1,25 +1,31 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_card_app/components/my_textfield.dart';
+import 'sign_in_screen.dart';
+import 'package:flash_card_app/authentification/auth_page.dart';
 
-class SignInScreen extends StatefulWidget {
-  SignInScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
-  // text editing controllers
+class _SignUpScreenState extends State<SignUpScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
-  // sign user in method
-  void signUserIn() async {
+  void signUserUp() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
+      );
+      // Navigate to the authentication page upon successful sign-up
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => AuthPage()),
       );
     } on FirebaseAuthException catch (e) {
       // Display error message based on the exception code
@@ -63,45 +69,44 @@ class _SignInScreenState extends State<SignInScreen> {
       backgroundColor: Color.fromARGB(255, 124, 168, 201),
       body: SafeArea(
         child: SingleChildScrollView(
-          // Wrap your Column with SingleChildScrollView
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                // logo
                 const Icon(
                   Icons.lock,
                   size: 100,
                 ),
                 const SizedBox(height: 50),
-                // welcome back, you've been missed!
                 Text(
-                  'Welcome back you\'ve been missed!',
+                  'Create New Account',
                   style: TextStyle(
                     color: const Color.fromARGB(255, 0, 0, 0),
                     fontSize: 16,
                   ),
                 ),
                 const SizedBox(height: 25),
-                // email textfield
                 MyTextField(
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
                 ),
                 const SizedBox(height: 10),
-                // password textfield
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
                 ),
                 const SizedBox(height: 10),
+                MyTextField(
+                  controller: confirmPasswordController,
+                  hintText: 'Confirm Password',
+                  obscureText: true,
+                ),
                 const SizedBox(height: 25),
-                // sign in button
                 GestureDetector(
-                  onTap: signUserIn,
+                  onTap: signUserUp,
                   child: Container(
                     padding: const EdgeInsets.all(25),
                     margin: const EdgeInsets.symmetric(horizontal: 25),
@@ -111,7 +116,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     child: const Center(
                       child: Text(
-                        "Sign In",
+                        "Sign Up",
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -122,28 +127,37 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 const SizedBox(height: 50),
-                // not a member? register now
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Not a member?',
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
+                // Wrap "Register now" text with GestureDetector to make it tappable
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              SignInScreen()), // Navigate to SignUpScreen
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Already a member?',
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    const Text(
-                      'Register now',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 19, 125, 211),
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(width: 4),
+                      const Text(
+                        'Sign in now',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 19, 125, 211),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                    height: 100), // Add some additional space at the bottom
+                const SizedBox(height: 100),
               ],
             ),
           ),
