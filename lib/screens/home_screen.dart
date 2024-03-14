@@ -17,12 +17,7 @@ class HomeScreen extends StatelessWidget {
 
   //pop-up for browse flashcard
   void showBrowseFlashcardDialog(BuildContext context) {
-    List<String> categories = [
-      'Math',
-      'World History',
-      'Literature',
-      'Science'
-    ]; // Example categories list
+    // Example categories list
     showDialog(
       context: context,
       builder: (BuildContext context) {
