@@ -1,7 +1,10 @@
+import 'package:flash_card_app/screens/browse_flashcards_screen.dart';
+import 'package:flash_card_app/screens/home_screen.dart';
+
 import 'package:flutter/material.dart';
 
 class CreateFlashcardScreen extends StatefulWidget {
-  final String categoryName;
+  final String? categoryName;
 
   const CreateFlashcardScreen({Key? key, required this.categoryName})
       : super(key: key);
@@ -43,6 +46,7 @@ class _CreateFlashcardScreenState extends State<CreateFlashcardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String? selectedCategory = '${widget.categoryName}';
     return Scaffold(
       appBar: AppBar(
         title: Text('Create Flashcards For ${widget.categoryName} Category'),
@@ -98,6 +102,35 @@ class _CreateFlashcardScreenState extends State<CreateFlashcardScreen> {
                       child: ElevatedButton(
                         onPressed: saveFlashcard,
                         child: Text('Save Flashcard'),
+                      ),
+                    ),
+                    SizedBox(
+                        height:
+                            20), // Add spacing before the 'Complete Flashcard Set' button
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Your logic when the 'Complete Flashcard Set' is pressed
+                          //print("Finished card set");
+                          if (flashcards.isNotEmpty) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen(),
+                                // builder: (context) => BrowseFlashcardsScreen(
+                                //     selectedCategory: selectedCategory,
+                                //     flashcards: flashcards),
+                              ),
+                            );
+                          } else {
+                            // Optionally, show a message if there are no flashcards to browse
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      'No flashcards to browse. Please add some first.')),
+                            );
+                          }
+                        },
+                        child: Text('Complete Flashcard Set'),
                       ),
                     ),
                   ],

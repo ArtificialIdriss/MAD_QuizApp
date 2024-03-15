@@ -3,10 +3,28 @@ import 'package:flutter/material.dart';
 import 'create_flascards_screen.dart';
 import 'browse_flashcards_screen.dart';
 import 'quiz_mode_screen.dart';
+import 'package:flash_card_app/screens/premade_flashcards.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  //List<String> categories = ['Math', 'World History', 'Literature', 'Science'];
+  //Map<String, List<Map<String, String>>> premade = premadeFlashcards;
+  //List<String> categories = premade.keys.toList();
+
   final user = FirebaseAuth.instance.currentUser!;
-  List<String> categories = ['Math', 'World History', 'Literature', 'Science'];
+
+  //category updater:
+  // void updateCategoriesList(String newCategory) {
+  //   if (!categories.contains(newCategory)) {
+  //     setState(() {
+  //       categories.add(newCategory);
+  //     });
+  //   }
+  // }
 
   // sign user out
   void signOutUser(BuildContext context) {
@@ -60,13 +78,26 @@ class HomeScreen extends StatelessWidget {
                 TextButton(
                   child: const Text('Continue'),
                   onPressed: () {
-                    if (selectedCategory != null) {
-                      // Perform navigation after state update and if a category is selected
-                      Navigator.of(context).pop(); // Close the dialog first
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => BrowseFlashcardsScreen(
-                            selectedCategory: selectedCategory),
-                      ));
+                    if (selectedCategory != null &&
+                        premadeFlashcards.containsKey(selectedCategory)) {
+                      // Since premadeFlashcards is already initialized and contains a list of maps for each category,
+                      // you can directly use it to retrieve the flashcards for the selected category.
+                      List<Map<String, String>> flashcards =
+                          premadeFlashcards[selectedCategory]!;
+
+                      // Now you can pass these flashcards to the BrowseFlashcardsScreen.
+                      // This assumes BrowseFlashcardsScreen has been properly set up to accept and use
+                      // both the 'selectedCategory' String and the 'flashcards' List<Map<String, String>>.
+                      Navigator.of(context)
+                          .pop(); // Close the current dialog first
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => BrowseFlashcardsScreen(
+                            //flashcards: premadeFlashcards[selectedCategory],
+                            selectedCategory: selectedCategory,
+                          ),
+                        ),
+                      );
                     }
                   },
                 ),
@@ -83,7 +114,7 @@ class HomeScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        String? selectedCategory = null;
+        String? categoryName = null;
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
@@ -97,10 +128,10 @@ class HomeScreen extends StatelessWidget {
                       child: const Text('Add New Category'),
                     ),
                     DropdownButton<String>(
-                      value: selectedCategory,
+                      value: categoryName,
                       onChanged: (String? newValue) {
                         setState(() {
-                          selectedCategory = newValue;
+                          categoryName = newValue;
                         });
                       },
                       items: categories
@@ -115,12 +146,12 @@ class HomeScreen extends StatelessWidget {
                     TextButton(
                       child: const Text('Continue'),
                       onPressed: () {
-                        if (selectedCategory != null) {
+                        if (categoryName != null) {
                           // Perform navigation after state update and if a category is selected
                           Navigator.of(context).pop(); // Close the dialog first
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => BrowseFlashcardsScreen(
-                                selectedCategory: selectedCategory),
+                            builder: (context) => CreateFlashcardScreen(
+                                categoryName: categoryName),
                           ));
                         }
                       },
