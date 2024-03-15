@@ -16,7 +16,7 @@ class _BrowseFlashcardsScreenState extends State<BrowseFlashcardsScreen> {
   bool _showAnswer = false;
 
   List<Map<String, String>> get flashcards {
-    return premadeFlashcards[widget.selectedCategory] ?? [];
+    return premadeFlashcards[widget.selectedCategory]!;
   }
 
   @override
