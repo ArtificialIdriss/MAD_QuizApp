@@ -1,5 +1,6 @@
 import 'package:flash_card_app/screens/browse_flashcards_screen.dart';
 import 'package:flash_card_app/screens/home_screen.dart';
+import 'package:flash_card_app/screens/premade_flashcards.dart';
 
 import 'package:flutter/material.dart';
 
@@ -21,19 +22,25 @@ class _CreateFlashcardScreenState extends State<CreateFlashcardScreen> {
   List<Map<String, String>> flashcards = [];
 
   void saveFlashcard() {
+    String? selectedCategory = '${widget.categoryName}';
+
     // Store question and answer in the flashcards list
     String question = _questionController.text.trim();
     String answer = _answerController.text.trim();
 
     if (question.isNotEmpty && answer.isNotEmpty) {
-      flashcards.add({"question": question, "answer": answer});
+      if (!premadeFlashcards.containsKey(selectedCategory)) {
+        premadeFlashcards[selectedCategory] = [];
+      }
+      premadeFlashcards[selectedCategory]!
+          .add({"question": question, "answer": answer});
 
       // Clear the text fields for new input
       _questionController.clear();
       _answerController.clear();
 
       // Optional: Print flashcards to console for debugging
-      print(flashcards);
+      print(premadeFlashcards[selectedCategory]);
     }
   }
 
@@ -112,7 +119,7 @@ class _CreateFlashcardScreenState extends State<CreateFlashcardScreen> {
                         onPressed: () {
                           // Your logic when the 'Complete Flashcard Set' is pressed
                           //print("Finished card set");
-                          if (flashcards.isNotEmpty) {
+                          if (premadeFlashcards[selectedCategory]!.isNotEmpty) {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => HomeScreen(),
