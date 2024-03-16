@@ -109,6 +109,82 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  //quiz popup
+  void showQuizModeDialog(BuildContext context) {
+    // Example categories list
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String? selectedCategory =
+            null; // This holds the selected dropdown value
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Select Category'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    DropdownButton<String>(
+                      value: selectedCategory,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedCategory =
+                              newValue; // Update the selected value
+                        });
+                      },
+                      items: categories
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      hint: const Text('Select a category'),
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Close'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Continue'),
+                  onPressed: () {
+                    if (selectedCategory != null &&
+                        premadeFlashcards.containsKey(selectedCategory)) {
+                      // Since premadeFlashcards is already initialized and contains a list of maps for each category,
+                      // you can directly use it to retrieve the flashcards for the selected category.
+                      List<Map<String, String>> flashcards =
+                          premadeFlashcards[selectedCategory]!;
+
+                      // Now you can pass these flashcards to the BrowseFlashcardsScreen.
+                      // This assumes BrowseFlashcardsScreen has been properly set up to accept and use
+                      // both the 'selectedCategory' String and the 'flashcards' List<Map<String, String>>.
+                      Navigator.of(context)
+                          .pop(); // Close the current dialog first
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => QuizModeScreen(
+                            //flashcards: premadeFlashcards[selectedCategory],
+                            selectedCategory: selectedCategory,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   //popup for create flashcard
   void showCreateFlashcardsDialog(BuildContext context) {
     showDialog(
@@ -257,14 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => QuizModeScreen(),
-                  ),
-                );
-              },
+              onPressed: () => showQuizModeDialog(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color.fromARGB(
                     255, 77, 104, 255), // Match sign-in button color
