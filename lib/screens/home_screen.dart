@@ -298,77 +298,105 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Home'),
       ),
       backgroundColor: const Color.fromARGB(255, 124, 168, 201),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("Logged In As: ${user?.email ?? 'N/A'}",
-                style: const TextStyle(fontSize: 18, color: Colors.black)),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => showCreateFlashcardsDialog(context),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 77, 104, 255)),
-              child: const Text('Create Flashcards',
-                  style: TextStyle(color: Colors.white)),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "Logged In As: ${user?.email ?? 'N/A'}",
+              style: const TextStyle(fontSize: 16, color: Colors.black),
             ),
-            const SizedBox(height: 10),
-            // Additional buttons here...
-            ElevatedButton(
-              onPressed: () => showBrowseFlashcardDialog(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(
-                    255, 77, 104, 255), // Match sign-in button color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      8), // Match sign-in button border radius
+          ),
+          const SizedBox(height: 250),
+          Center(
+            child: SizedBox(
+              width: 300, // Specify the width here
+              height: 75, // Specify the height here
+              child: ElevatedButton(
+                onPressed: () => showCreateFlashcardsDialog(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 77, 104, 255),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-              ),
-              child: Text(
-                'Browse Flashcards',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+                child: const Text('Create Flashcards',
+                    style: TextStyle(color: Colors.white)),
               ),
             ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () => showQuizModeDialog(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(
-                    255, 77, 104, 255), // Match sign-in button color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      8), // Match sign-in button border radius
+          ),
+          const SizedBox(height: 10),
+          // Additional buttons here...
+          Center(
+            child: SizedBox(
+              width: 300,
+              height: 75,
+              child: ElevatedButton(
+                onPressed: () => showBrowseFlashcardDialog(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(
+                      255, 77, 104, 255), // Match sign-in button color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-              ),
-              child: Text(
-                'Quiz Mode',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () => signOutUser(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(
-                    255, 221, 46, 68), // Use consistent sign-out button color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      8), // Match sign-in button border radius
-                ),
-              ),
-              child: Text(
-                'Sign Out',
-                style: TextStyle(
-                  color: Colors.white,
+                child: Text(
+                  'Browse Flashcards',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+          SizedBox(height: 10),
+          Center(
+            child: SizedBox(
+              width: 300, // Specify the width here
+              height: 75, // Specify the height here
+              child: ElevatedButton(
+                onPressed: () => showQuizModeDialog(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(
+                      255, 77, 104, 255), // Match sign-in button color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  'Quiz Mode',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          Center(
+            child: SizedBox(
+              width: 200, // Specify the width here
+              height: 50, // Specify the height here
+              child: ElevatedButton(
+                onPressed: () => signOutUser(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(
+                      255, 221, 46, 68), // Use consistent sign-out button color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  'Sign Out',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
